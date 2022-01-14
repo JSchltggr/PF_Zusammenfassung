@@ -2,28 +2,44 @@
 %! Date = 10/01/2022
 
 \section{Boxing / Killing}
-\subsection{Singleton Boxing / Killing}
+\subsection{Singleton Boxing/Killing}
 \subsubsection{Problem}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Some Classes should have only one instance
     \item The instance must be accessible from a well-known access point 
     \item Subclassing from the Singleton should be possible
     \item Extending the Singleton class must not break existing code
-    \item How can be guaranteed that only one oject of a class is instantiated and can globally be accessed?
+    \item How can be guaranteed that only one object of a class is instantiated and can globally be accessed?
 \end{itemize}
 \subsubsection{Solution}
-Ensure a class only has one instance and provide a global point of access to it 
-\includegraphics[width=\linewidth]{./img/singleton.png}
+Ensure a class only has one instance and provide a global point of access to it\\
+\includegraphics[width=\linewidth]{singleton}
 \subsubsection{Solutions inside Singleton}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Singleton Pattern
     \item Class Factory Method
     \item Lazy Acquisition
     \item Eager Acquisition
 \end{itemize}
+\subsubsection{Implementation}
+\begin{lstlisting}[style=htmlcssjs]
+public class Singleton {
+  private static class InstanceHolder {
+  // Singleton will be instantiated as soon as the ClassLoader instantiates the overlying class.
+  private static final Singleton INSTANCE = new Singleton();
+  }
+  public static Singleton getInstance() {
+    return InstanceHolder.INSTANCE;
+  }
+  protected Singleton() { } // allow subclassing
+}
+\end{lstlisting}
 \subsubsection{Summary}
 \textbf{Benefits}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Controlled access to sole instance
     \item Reduced name space
     \item Permits refinement of operations and representation
@@ -31,24 +47,27 @@ Ensure a class only has one instance and provide a global point of access to it
     \item More flexible than class operations
 \end{itemize}
 \textbf{Liabilities}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Introduces a global variable/state
     \item Prevents polymorphism
     \item Carries state until app closes
-    \item Restricts unit testing
+    \item Restricts unit testing due limited interchangeability
 \end{itemize}
 
 \subsection{Singleton Variation 'Registry'}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item More flexible approach
     \item Uses a registry of singletons
     \item Classes registers their singleton in a well-known registry
 \end{itemize}
-\includegraphics[width=\linewidth]{./img/registry.png}
+\includegraphics[width=\linewidth]{registry}
 
 \subsection{Monostate (Borg) - Killing}
 \subsubsection{Problem}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Multiple instances should have the same behaviour
     \item The instances should be simply different names for the same object 
     \item Should have the behaviour of Singleton without imposing the constraint of a single instance
@@ -56,75 +75,102 @@ Ensure a class only has one instance and provide a global point of access to it
 \end{itemize}
 \subsubsection{Solution}
 Create a monostate object and implement all member variables as static members 
-\begin{lstlisting}
+\begin{lstlisting}[style=htmlcssjs]
+// Example 1
 public class Monostate {
-    private static int x;
-    public int getX() { return x; }
+  private static int x;
+  private static int x;
+  public int getX() { return x; }
+  public int getY() { return y; }
+}
+// Example 2
+public interface Monostate {
+  int getX();
+  int getY();
+}
+public class MonostateImpl implements Monostate {
+  public int getX() {
+    return Singleton.getInstance().getX();
+  }
+  public int getY() {
+    return Singleton.getInstance().getY();
+  }
 }
 \end{lstlisting}
 \subsubsection{Summary}
 \textbf{Benefits}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Transparency, no need to know about Monostate
-    \item Derivability
-    \item Polymorphism
+    \item Derivability, subclasses allowed
+    \item Polymorphism, different derivates can offer different behavior
     \item Well-defined creation and destruction
 \end{itemize}
 \textbf{Liabilities}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Breaks inheritance hierarchy
-    \item Memory usage
+    \item Memory usage, because statics are always allocated
     \item Unable to share Monostate across several tiers
 \end{itemize}
 
 \subsection{Service Locator}
 \subsubsection{Problem}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Implementation of a global service instance should be exchangeable
     \item It should be possible to execute the service methods on another tier transparently
     \item How could we register and locate global services when one is needed?
 \end{itemize}
 \subsubsection{Solution}
 Implement a service locator that knows how to hold all of the services that an application might need.
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Implement the ServiceLocator as a Singleton 'Registry'
     \item ServiceLocator returns \textit{finder} instances, which are used to locate the underlying services
+    \item Also known as dynamic ServiceLocator or Provider
 \end{itemize} 
-\includegraphics[width=\linewidth]{./img/service_locator.png}
-\includegraphics[width=\linewidth]{./img/service_locator_dynamic.png}
+\includegraphics[width=\linewidth]{service_locator}
+\includegraphics[width=\linewidth]{service_locator_dynamic}
 \subsubsection{Summary}
 \textbf{Benefits}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item There is exactly ONE Singleton in the application
     \item ServiceLocator interface strogly rely on abstractness
 \end{itemize}
 \textbf{Liabilities}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Clients stll rely on a static reference to ServiceLocator class (tight coupling)
     \item No possibility to replace the ServiceLocator 
 \end{itemize}
 
 \subsection{Parameterize from Above}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Singleton pattern doesn't provide durability and testability requirements
     \item The application has been layered (horizontally) in a logical manner
     \item How can we povide the required application-wide data to the lower layers without making the data globally accessible?
 \end{itemize}
 \subsubsection{Solution}
 Parameterize each layer from above. Data that affect the behaviour of lower layers should be passed in from the top of the stack.
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Pass in configuration parameters and 'known' objects rather than having them global
 \end{itemize}
 \subsubsection{Summary}
 \textbf{Benefits}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item No global variables
     \item Implementations of parameterized functionalities are exchangeable
     \item Enforces separation-of-concenrns at architecture level
     \item Reduces coupling between layers
 \end{itemize}
 \textbf{Liabilities}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Adds more complexity to the system
     \item Contexts must be passed through the whole app stack
     \item Fragile Bootstrapper: app must be wired completely at startup
@@ -132,35 +178,41 @@ Parameterize each layer from above. Data that affect the behaviour of lower laye
 
 \subsection{Dependency Injection}
 \subsubsection{Problem}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item User may override implementations of existing app components (e.g. test doubles)
     \item Any Componet within the system can demand an object of a specified interface
     \item The Components should not know anything about the wiring mechanism
+    \item How can framework users provide their own implementation/specialization of predefined framework components and even extend the system by own interface definitions and implementations?
 \end{itemize}
 \subsubsection{Solution}
 Introduce a DI Container which loads the interfaces and implementation calsses at startup and dynamically instantiates and wires the objects according to the dependency tree.
-\begin{itemize}
-    \item Central container
-    \item Users reference dependencies by the required interfaces
-    \item Users apply code annotations 
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
+    \item Central container class (acts as Registry)
+    \item Users reference dependencies by the required interfaces (resolved by container)
+    \item Users apply code annotations
     \item Clients should not address the container directly
 \end{itemize}
 \subsubsection{Implementation}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Combine \textit{Service Locator} and \textit{PfA}
     \item Container class must not be statically referenced by clients
 \end{itemize}
-\includegraphics[width=\linewidth]{./img/di_impl.png}
+\includegraphics[width=\linewidth]{di_impl}
 \subsubsection{Summary}
 \textbf{Benefits}
-\begin{itemize}
-    \item Reduces coupling
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
+    \item Reduces coupling between consumer and implementation
     \item Contracts between classes are based on interfaces
     \item Suports open/closed principle
     \item Allows flexible replacement of an implementation
 \end{itemize}
 \textbf{Liabilities}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Adds black magic to the system
     \item Debugging the object dependency tree may become hard
     \item Recursive dependencies are hard to find and may prevent the sytem from startup
@@ -168,12 +220,14 @@ Introduce a DI Container which loads the interfaces and implementation calsses a
 \end{itemize}
 \subsubsection{Discussion}
 \textbf{Relation Singleton - DI}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Some injected Dependencies may be singletons
     \item DI Container implementation may be based on 'registry' singleton
 \end{itemize}
 \textbf{Improvement of DI over Service Locator}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Client classes dont depend directly on the DI Container
     \item Less coupling between DI Container and Component
 \end{itemize}
@@ -181,23 +235,26 @@ Introduce a DI Container which loads the interfaces and implementation calsses a
 \subsection{Flyweight}
 A single pattern for both \textbf{sharing} and \textbf{creation}
 \subsubsection{Problem}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Storage costs are high because of the sheer quantity of objects
-    \item Many objects bay be replaced by relatively few shared objects
+    \item Many objects may be replaced by relatively few shared objects
     \item The objects do not depend on object identity
-    \item How can multiple copies of a identical constant object be avoided?
+    \item How can multiple copies of a identical constant object (referenced objects) be avoided?
 \end{itemize}
 \subsubsection{Solution}
 Use sharing to support large numbers of fine-grained objects efficiently
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Flyweight manager maintains instantiated flyweights
     \item Flyweights must be immutable (readonly)
     \item Context information is often maintained by parent object
 \end{itemize}
-\includegraphics[width=\linewidth]{./img/flyweight.png}
-\includegraphics[width=\linewidth]{./img/flyweight_dynamic.png}
+\includegraphics[width=\linewidth]{flyweight}
+\includegraphics[width=\linewidth]{flyweight_dynamic}
 \subsubsection{Solutions inside Flyweight}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Composite
     \item Immutable Value
     \item Pooling
@@ -207,63 +264,76 @@ Use sharing to support large numbers of fine-grained objects efficiently
 \end{itemize}
 \subsubsection{Summary}
 \textbf{Benefits}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Reduction of the total number of instances (space savings)
 \end{itemize}
 \textbf{Liabilities}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Can't rely on object identity
     \item May introduce run-time costs
 \end{itemize}
 
 \subsection{Pooling (Boxing)}
 \subsubsection{Problem}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item A fast and predictable access to resources should be provided
-    \item Wastage of CPU cycles in repetitious acquisition / release should be avoided
-    \item Acquisition / release complexity should be minimized
+    \item Wastage of CPU cycles in repetitious acquisition/release should be avoided
+    \item Acquisition/release complexity should be minimized
     \item How can expensive acquisition and release of resources be avoided by recycling resources that are no longer needed?
 \end{itemize}
 \subsubsection{Solution}
 Manage multiple instances of one type of resource in a pool. This pool of resources allows for reuse of released resources.
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item A resource pool manages resources and gives them to the users
     \item Resource providers, such as OS, owns and manages the resources
 \end{itemize}
-\includegraphics[width=\linewidth]{./img/pooling.png}
+\includegraphics[width=\linewidth]{pooling}
 \subsubsection{Implementation}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Define the maximum number of resources that are maintained by the pool
     \item Decide between \textit{eager} and \textit{lazy} Acquisition
     \item Determine resources recycling/eviction semantics
+        \SubItem E.g. clean up stack after thread execution has computed
+        \SubItem Use appropriate allocation and destruction patterns
 \end{itemize}
 \subsubsection{Summary}
 \textbf{Benefits}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Performance of app
     \item Simplified release and acquisition of resources
     \item New resources can be created dynamically
 \end{itemize}
 \textbf{Liabilities}
-\begin{itemize}
-    \item Certain overhead
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
+    \item Certain overhead due resource management
     \item Acquisition requests must be synchronized to avoid race conditions
 \end{itemize}
 \subsubsection{Discussion}
-\textbf{Pattern that can be combined with Pooling}
-\begin{itemize}
+\textbf{Which pattern can be combined with Pooling, if the same resources should be shared between users?}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Pool acts as mediator
 \end{itemize}
 \textbf{Relation of Flyweight and Pooling}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Flyweight implements a pool with immutable resources statically
 \end{itemize}
 \textbf{Is immutability of named resources key?}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item No
 \end{itemize}
 \textbf{Difference between pooling and caching}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Caching is about handling resources with identity, pooling does not
     \item All resources in a pool are equal
     \item Caching only manages object lifetime in cache, not of objects themselve

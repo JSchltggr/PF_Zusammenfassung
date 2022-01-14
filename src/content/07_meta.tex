@@ -2,73 +2,94 @@
 %! Date = 10/01/2022
 
 \section{Meta Pattern}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Reflection is often used as technology for Meta Programming
     \item Provide Flexibility, Adaptability \& Generality
 \end{itemize}
 \textbf{Recurring Problems}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Reflection solves common frameworkers problems
     \item Exchanging parts of a software system is hard
     \item Not yet unknown sofware components should be integrated
 \end{itemize}
 
 \subsection{Reflection}
-\textbf{Usage (Java / C\#)}
-\begin{itemize}
-    \item Load of JAR / DLL
-    \item Invoke Methods 
+\textbf{Usage (Java/C\#)}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
+    \item Load of JAR/DLL files at runtime
+    \item Invoke Methods
     \item Read out properties/fields 
     \item Create object instances 
     \item Search for annotations on Classes / Methods / Fields / ...
 \end{itemize}
-\textbf{Provides Facility to implement:}
-\begin{itemize}
+\textbf{Provides Facility to implement (Usage):}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item DI
     \item Convention over Configuration
     \item Object-Relation Mapper
-    \item Serialization / Deserialization
+    \item Serialization/Deserialization
     \item Plugin Architectures
 \end{itemize}
 Consists of two aspects:\\ 
 \textbf{Introspection}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item The ability for a program to observe and therefore reason about its own state
     \item e.g. Query object properties, get list of methods
 \end{itemize}
 \textbf{Intercession}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item The ability of a program to modify its own execution state or alter its own interpretation of meaning
     \item e.g. Modify object properties, add another attribute or exchange code
 \end{itemize}
 Defines meta level and base level:\\ 
 \textbf{Meta level}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Provides self-representation
     \item Gives the SW a knowledge of its own structure
     \item Consists of meta objects
 \end{itemize}
 \textbf{Base level}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Defines the app logic
     \item Implementation may use the meta objects
 \end{itemize}
-\includegraphics[width=\linewidth]{./img/meta_base_level.png}
+\includegraphics[width=\linewidth]{meta_base_level.png}
 \subsubsection{Summary}
 \textbf{Benefits}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Adapting a software system is easy
     \item Support for many kinds of changes
 \end{itemize}
 \textbf{Liabilities}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Produces non-transparent APIs
     \item Binding at runtime (limited Type safety)
 \end{itemize}
+\textit{Dangers}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
+    \item Different mechanisms for similar semantics confuse
+    \item More indirection costs efficiency - sometimes too much
+    \item Too much work to configure and instantiate systems
+    \item Obscure APIs
+    \item Overengineered solutions
+    \item Security mechanisms get in the way or are undermined
+\end{itemize}
 
 \subsection{Meta Objects}
-\textbf{Usage}
-\begin{itemize}
+\textbf{Languages using reflections use meta objects for:}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Classes
     \item Object Attributes
     \item Methods
@@ -77,82 +98,97 @@ Defines meta level and base level:\\
 
 \subsection{Type Object}
 \subsubsection{Problem}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item We want to keep common behaviour and data in only one place
     \item DRY implementation of domain
     \item How can you categorize objects, eventually dynamically?
 \end{itemize}
 \subsubsection{Solution}
 Categorize objects by another object instead of a class. Thus an object can change it's 'class' at runtime
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Create a category (type) object which describes multiple objects
     \item Objects forward the calls to the underlying type
 \end{itemize}
-\includegraphics[width=\linewidth]{./img/type_object.png}
+\includegraphics[width=\linewidth]{type_object.png}
 \subsubsection{Summary}
 \textbf{Benefits}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Categories can be added easily, event at runtime
+    \item Avoids explosion of (trivial) subclasses
     \item Allows multiple meta-levels
 \end{itemize}
 \textbf{Liabilities}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Confusing mess of 'classes' because of separation
     \item Lower efficiency because of indirection
     \item Changing database schemas can be tricky
 \end{itemize}
 \subsubsection{Discussion}
 \textbf{Based on which GoF Pattern}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Strategy
 \end{itemize}
 \textbf{Similar intent in a GoF Pattern}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item State, also changes at runtime
 \end{itemize}
 
 \subsection{Property List}
 \subsubsection{Problem}
-\begin{itemize}
-    \item Attributes should be attachable / detachable after compilation
-    \item Objects share attributes / parameters across the class hierarchy
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
+    \item Attributes should be attachable/detachable after compilation
+    \item Objects share attributes/parameters across the class hierarchy
     \item How do you define properties in a flexible way so they can be attached and detached at runtime?
 \end{itemize}
 \subsubsection{Solution}
 Provide objects with a property list. That list allows to associate names with other values or objects.
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Property list maps attribute names to values
     \item each name defines a slot
     \item Same slot can be used for attributes with identical semantics
     \item Objects can be triggred to list all slot names and values
 \end{itemize}
-\includegraphics[width=\linewidth]{./img/property_list.png}
+\includegraphics[width=\linewidth]{property_list.png}
 \subsubsection{Summary}
 \textbf{Benefits}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Attributes can be added dynamically
     \item Object extension while keeping object identity
     \item Easy attribute iteration
 \end{itemize}
 \textbf{Liabilities}
-\begin{itemize}
-    \item Different ways to access regular / dynamic attributes
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
+    \item Different ways to access regular/dynamic attributes
     \item Type safety left to the programmer
+    \item Naming not checked by a compiler
     \item Run-time overhead
     \item Memory Management
 \end{itemize}
 \textbf{Mitigate Liabilities:} Bridge Methods
 
 \subsection{Anything}
-\begin{itemize}
+\textit{What is Anithing?}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Arbitrary data structure
     \item Recursively structured Property List
     \item Internal representation of today's JSON
 \end{itemize}
-\textbf{Object Definition:}
-\includegraphics[width=\linewidth]{./img/anything.png}
+\textbf{Object Definition:}\\
+\includegraphics[width=\linewidth]{anything.png}
 \subsubsection{Problem}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item We need to keep a map of data similar to the Property List
     \item Structured data also includes sequences of data
     \item Data should be structured recursively
@@ -160,22 +196,25 @@ Provide objects with a property list. That list allows to associate names with o
 \end{itemize}
 \subsubsection{Solution}
 Create an abstraction for structured values that is self describing.
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Implement a representation of simple values
     \item Add an implementation for a sequence of values (\& key value access)
-    \item Provide a default value
+    \item Provide a default value if requested value cannot be converted
 \end{itemize}
-\includegraphics[width=\linewidth]{./img/anything_uml.png}
+\includegraphics[width=\linewidth]{anything_uml.png}
 \subsubsection{Summary}
 \textbf{Benefits}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Readable streaming format
     \item Appropriate for configuration data
     \item Universally applicable
     \item Flexible interchange across class/object boundaries
 \end{itemize}
 \textbf{Liabilities}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Less type safety
     \item Intent of parameter elements not always obvious
     \item Overhead for value lookup and member access
@@ -183,7 +222,8 @@ Create an abstraction for structured values that is self describing.
 \end{itemize}
 \subsubsection{Discussion}
 \textbf{Which GoF Pattern does Anything implement?}
-\begin{itemize}
+\begin{itemize}[topsep=0pt]
+    \itemsep -0.4em
     \item Transparent Composite Pattern
     \item Null Object
 \end{itemize}
